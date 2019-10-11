@@ -22,7 +22,7 @@
     >
         submit
     </button>
-    <button v-on:click="previous" v-bind:disabled="!endOfQuiz" class="btn btn-primary" type="submit">previous</button>
+    <button v-on:click="previous" v-bind:disabled="!endOfQuiz && index === 0" class="btn btn-primary" type="submit">previous</button>
     <button v-on:click="next" v-bind:disabled="endOfQuiz" class="btn btn-primary" type="submit">next</button>
 </div>
   
@@ -36,7 +36,8 @@ export default {
         next:Function,
         increment:Function,
         previous:Function,
-        endOfQuiz:Boolean
+        endOfQuiz:Boolean,
+        index:Number
     },
     data(){
         return{

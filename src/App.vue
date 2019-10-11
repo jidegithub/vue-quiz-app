@@ -13,6 +13,7 @@
       :previous="previous"
       :increment="increment"
       :endOfQuiz="endOfQuiz"
+      :index="index"
     />
     </div>
     
@@ -62,7 +63,6 @@ export default {
     axios.get('http://localhost:3000/users')
     .then((res)=>{
       this.questions = res.data.results
-      console.log(res.data.results)
     })
   }
 }
