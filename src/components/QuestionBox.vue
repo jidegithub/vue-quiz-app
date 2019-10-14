@@ -1,115 +1,89 @@
 <template>
 <div>
-    <div class="jumbotron">
-      <p>
-       {{ currentQuestion.question }}
-      </p>
+    <section class="hero is-dark is-small">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    {{ Currentquestion.question }}
+                </h1>
+            
+                <a v-for="(allAnswer, index) in answer" v-bind:key="index" 
+                class="navbar-item"
+                v-on:click="selectedAnswer(index)"
+                v-bind:class="addSelectedClass(index)"
+                >
+                    {{ allAnswer }}
+                </a>
+            </div>
+        </div>
+    </section>
+    <div class="field">
+        <div class="control">
+            <input class="button" type="button" value="submit">
+        </div>
+        <div class="control">
+            <input class="button" v-on:click.enter="nextQuestion"  type="button" value="next">
+        </div>
     </div>
-    <hr>
-    <p class="answers" v-for="(answer, index) in answers" v-bind:key="index"
-    v-on:click="selectAnswer(index)"
-    v-bind:class="[ 
-        !answered && selectedIndex === index ? 'selected' : 
-        answered && correctIndex === index ? 'correct' : 
-        answered && selectedIndex === index && correctIndex !== index ? 'incorrect' : ''
-    ]"
-    >
-        {{ answer }}
-    </p>
-    <button class="btn btn-primary" type="submit"
-        v-on:click="submitAnswer"
-        v-bind:disabled="selectedIndex === null || answered"
-    >
-        submit
-    </button>
-    <button v-on:click="previous" v-bind:disabled="!endOfQuiz && index === 0" class="btn btn-primary" type="submit">previous</button>
-    <button v-on:click="next" v-bind:disabled="endOfQuiz" class="btn btn-primary" type="submit">next</button>
 </div>
-  
 </template>
 
 <script>
-import _ from 'lodash';
 export default {
     props:{
-        currentQuestion: Object,
-        next:Function,
-        increment:Function,
-        previous:Function,
-        endOfQuiz:Boolean,
-        index:Number
+        Currentquestion: Object,
+        nextQuestion: Function,
     },
     data(){
         return{
-            selectedIndex: null,
-            correctIndex: null,
-            shuffledAnswers: [],
-            answered:false
+            selectedAnswerIndex:null,
+            correctAnswerIndex:null,
+        }
+    },
+    methods:{
+        selectedAnswer(index){
+            this.selectedAnswerIndex = index;
+            console.log(this.selectedAnswerIndex, index)
+        },
+        addSelectedClass(index){
+            let addSelectedClass = ''
+            this.selectedAnswerIndex === index ? addSelectedClass ='selected' : ''
+            return addSelectedClass;
+        },
+        shuffleAnswer(array){
+            for(let i = array.length - 1; i > 0; i--){
+                let j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
         }
     },
     computed:{
-        answers() {
-           let answers = [...this.currentQuestion.incorrect_answers]
-            answers.push(this.currentQuestion.correct_answer)
+        answer() {
+            let answers = this.Currentquestion.incorrect_answers
+            answers.unshift(this.Currentquestion.correct_answer)
             return answers;
-        }
+        },
+        
     },
     watch:{
-        currentQuestion:{
-            immediate: true,
-            handler(){
-                this.selectedIndex = null
-                this.answered = false
-                this.shuffleAnswers() 
-            }
+        Currentquestion(){
+            this.selectedAnswerIndex = null;
         }
-        // (){
-        //     this.selectedIndex = null
-        //     this.shuffleAnswers()
-        // }
     },
-    methods:{
-        selectAnswer(index){
-            this.selectedIndex = index
-        },
-        shuffleAnswers(){
-            let answers = [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer]
-            this.shuffledAnswers = _.shuffle(answers);
-            this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer)
-
-        },
-        submitAnswer(){
-            let isCorrect = false;
-
-            if(this.selectedIndex === this.correctIndex){
-                isCorrect = true;
-            }
-            this.answered = true
-            this.increment(isCorrect)
-        }
-
-    },
-    // mounted(){
-    //     this.shuffleAnswers()
-    // }
+    mounted(){
+        this.shuffleAnswer(this.allAnswersArray)
+    }
 }
 </script>
 
-<style scoped>
-    .answers{
-        width: 50%;
-    }
-    .answers:hover{
-        background-color:#eee;
-        cursor: pointer;
-    }
+<style>
     .selected{
-        background-color: lightblue;
+        background-color: #292929;
     }
     .correct{
-        background-color: lightgreen;
+        background-color: aquamarine;
     }
     .incorrect{
-        background-color: lightsalmon;
+        background-color: salmon;
     }
 </style>

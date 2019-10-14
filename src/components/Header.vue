@@ -1,18 +1,36 @@
 <template>
-  <div>
-      <nav class="nav-tabs nav-justified">
-          <a class="nav-item active mr-5"><b>Quiz app</b></a>
-          <a class="nav-item">Counter: {{ this.numCorrect }}/{{ this.numTotal }}</a>
-      </nav>
-  </div>
+    <div class="navbar-menu">
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="field is-grouped">
+                    <p class="control">
+                    <a>
+                        <span class="icon">
+                        <i class="fas fa-twitter" aria-hidden="true"></i>
+                        </span>
+                        <span>Quiz App</span>
+                    </a>
+                    </p>
+                    <p class="control">
+                    <a class="button is-primary">
+                        <span>question</span>  {{ Currentquestion + 1 }} of 10
+                        <span class="icon">
+                        <i class="fas fa-download" aria-hidden="true"></i>
+                        </span>
+                        <span>correct</span> 1 of 10
+                    </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
 export default {
-    props:[
-        'numTotal',
-        'numCorrect'
-    ]
+    props:{
+        Currentquestion:Number
+    }
 }
 </script>
 
